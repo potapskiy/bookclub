@@ -11,7 +11,7 @@ public class HelloWorldServlet {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String sayPlainTextHello() {
-		return "Hello World";
+		return "Hello World!";
 	}
 
 }
