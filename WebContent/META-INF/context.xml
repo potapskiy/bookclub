@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/Reteko_Web_Front">
+   <Resource name="jdbc/DBBookClub" auth="Container"
+            type="javax.sql.DataSource" username="root" password="root"
+            driverClassName="com.mysql.jdbc.Driver"  maxWait="10000"
+            url="jdbc:mysql://localhost:3306/bookclub?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8"
+            maxActive="1000" maxIdle="100" />
+</Context>
