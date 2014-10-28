@@ -9,4 +9,7 @@ public interface DBParams {
 	String authorsTable = "authors";
 	String commentsTable = "comments";
 	
+	String shelfsTable = "shelfs";
+	String booksOnShelfs = "book_on_shelfs";
+	
 }

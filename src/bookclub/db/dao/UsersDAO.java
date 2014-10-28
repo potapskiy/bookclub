@@ -11,12 +11,13 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import bookclub.db.DBParams;
+import bookclub.entities.User;
 
 public class UsersDAO {
 
 	Connection conn = null;
 
-	PreparedStatement isUserExists;
+	PreparedStatement selectUserByLogin;
 	PreparedStatement insertUser;
 	PreparedStatement isUserRegistred;
 
@@ -30,7 +31,7 @@ public class UsersDAO {
 						.lookup(DBParams.JDBC_ENV);
 				conn = ds.getConnection();
 
-				isUserExists = conn.prepareStatement("SELECT * FROM "
+				selectUserByLogin = conn.prepareStatement("SELECT * FROM "
 						+ DBParams.usersTable + " WHERE login = ? LIMIT 1");
 				
 				isUserRegistred = conn.prepareStatement("SELECT * FROM "
@@ -38,7 +39,8 @@ public class UsersDAO {
 
 				insertUser = conn.prepareStatement("INSERT INTO "
 						+ DBParams.usersTable
-						+ " (login, password, name, surname) VALUES (?,?,?,?)");
+						+ " (login, password, name, surname) VALUES (?,?,?,?)",
+						Statement.RETURN_GENERATED_KEYS);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -72,8 +74,8 @@ public class UsersDAO {
 
 	public boolean isUserRegistred(String userLogin) throws SQLException {
 
-		isUserExists.setNString(1, userLogin);
-		ResultSet rs = isUserExists.executeQuery();
+		selectUserByLogin.setNString(1, userLogin);
+		ResultSet rs = selectUserByLogin.executeQuery();
 
 		if (rs.next()) {
 			return true;
@@ -83,21 +85,22 @@ public class UsersDAO {
 
 	}
 	
-	public boolean isUserDataCorrect(String userLogin, String userPassword) throws SQLException {
+	public User isUserDataCorrect(String userLogin, String userPassword) throws SQLException {
 
 		isUserRegistred.setNString(1, userLogin);
 		isUserRegistred.setNString(2, userPassword);
 		ResultSet rs = isUserRegistred.executeQuery();
 
 		if (rs.next()) {
-			return true;
+			return new User(rs.getInt("userId"), rs.getString("login"), 
+					rs.getString("password"), rs.getString("name"), rs.getString("surname"));
 		}
 
-		return false;
+		return null;
 
 	}
 
-	public boolean insertUser(String login, String password, String name,
+	public int insertUser(String login, String password, String name,
 			String surname) {
 
 		try {
@@ -107,13 +110,41 @@ public class UsersDAO {
 			insertUser.setNString(3, name);
 			insertUser.setNString(4, surname);
 
-			insertUser.execute();
+			int affectedRows = insertUser.executeUpdate();
+
+	        if (affectedRows == 0) {
+	            throw new SQLException("Creating user failed, no rows affected.");
+	        }
+	        
+	        
+	        try (ResultSet generatedKeys = insertUser.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	               return generatedKeys.getInt(1);
+	            }
+	            else {
+	                throw new SQLException("Creating user failed, no ID obtained.");
+	            }
+	        }
 
 		} catch (SQLException e) {
 
-			return false;
+			return 0;
 		}
-		return true;
+	
+
+	}
+	
+	public User getUser(String userLogin) throws SQLException {
+
+		selectUserByLogin.setNString(1, userLogin);
+		ResultSet rs = selectUserByLogin.executeQuery();
+
+		if (rs.next()) {
+			return new User(rs.getInt("userId"), rs.getString("login"), 
+					rs.getString("password"), rs.getString("name"), rs.getString("surname"));
+		}
+
+		return null;
 
 	}
 
