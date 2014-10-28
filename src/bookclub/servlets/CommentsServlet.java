@@ -2,6 +2,7 @@ package bookclub.servlets;
 
 import java.util.List;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -24,7 +25,9 @@ public class CommentsServlet {
 	@GET
 	@Path("get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getBookcomments(@HeaderParam("id") int bookId) {
+	public String getBookcomments(@HeaderParam("id") int bookId,
+			@DefaultValue("10")@HeaderParam("limit") int limit,
+			@DefaultValue("0")@HeaderParam("offset") int offset) {
 
 		JSONObject jsonReruest = new JSONObject();
 
@@ -32,8 +35,12 @@ public class CommentsServlet {
 
 		try {
 
-			List<Comment> comments = commentsDAO.getBookComments(bookId);
+			int commentsCount = commentsDAO.getBookCommentsCount(bookId);
+			
 			jsonReruest.put("bookId", bookId);
+			jsonReruest.put("total_comments", commentsCount);
+			
+			List<Comment> comments = commentsDAO.getBookComments(bookId,limit,offset);
 			JSONArray jsonComments = new JSONArray();
 
 			for (Comment comment : comments) {
@@ -100,6 +107,32 @@ public class CommentsServlet {
 		try {
 
 			commentsDAO.deleteComment(commentId);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("update")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updateComment(@HeaderParam("comment-id") int commentId, 
+			@HeaderParam("comment") String comment) {
+
+		JSONObject jsonReruest = new JSONObject();
+
+		String msg;
+
+		try {
+
+			commentsDAO.updateComment(commentId, comment);
 			msg = Messages.OK;
 			
 		} catch (Exception e) {

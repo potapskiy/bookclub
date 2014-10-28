@@ -51,5 +51,33 @@ public class UsersServlet {
 		return jsonReruest.toJSONString();
 		
 	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("check")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String checkUser(@HeaderParam("login") String login,
+			@HeaderParam("password") String password) {
+		
+		
+		JSONObject jsonReruest = new JSONObject();
+		
+		String msg;
+		
+		try {
+			msg = (usersDAO.isUserDataCorrect(login, password)) ? Messages.OK :  Messages.INCORRECT;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		
+		jsonReruest.put( "msg", msg);
+		return jsonReruest.toJSONString();
+		
+	}
 
 }

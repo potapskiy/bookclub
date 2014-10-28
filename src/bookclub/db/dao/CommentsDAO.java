@@ -20,7 +20,9 @@ public class CommentsDAO {
 	Connection conn = null;
 
 	PreparedStatement getBookComments;
+	PreparedStatement getBookCommentsCount;
 	PreparedStatement insertComment;
+	PreparedStatement updateComment;
 	PreparedStatement deleteComment;
 
 	public CommentsDAO() {
@@ -36,10 +38,17 @@ public class CommentsDAO {
 				getBookComments = conn.prepareStatement("SELECT * FROM "
 						+ DBParams.commentsTable + " c\r\n" + "LEFT JOIN "
 						+ DBParams.usersTable + " u ON c.userId=u.userId \r\n"
-						+ "WHERE bookId = ?");
+						+ "WHERE bookId = ? limit ?,?");
+				
+				
+				getBookCommentsCount = conn.prepareStatement("SELECT COUNT(*) as com_count FROM "
+						+ DBParams.commentsTable + " WHERE bookId = ?");
 				
 				insertComment = conn.prepareStatement("INSERT INTO " + DBParams.commentsTable
 						+ " (userId, bookId, commentText) VALUES (?,?,?)");
+				
+				updateComment = conn.prepareStatement("UPDATE " + DBParams.commentsTable
+						+ " SET commentText = ?  where commentId = ?");
 				
 				deleteComment = conn.prepareStatement("DELETE * FROM " + DBParams.commentsTable
 						+ " WHERE commentId = ?");
@@ -73,12 +82,29 @@ public class CommentsDAO {
 		}
 
 	}
+	
+	
+	public int getBookCommentsCount(int bookId) throws SQLException {
 
-	public List<Comment> getBookComments(int bookId) throws SQLException {
+		getBookCommentsCount.setInt(1, bookId);
+		ResultSet rs = getBookCommentsCount.executeQuery();
+		
+		int count = (rs.next()) ? rs.getInt("com_count") : 0; 
+		
+		return count;
+
+	}
+
+	
+	
+	
+	public List<Comment> getBookComments(int bookId, int limit, int offset) throws SQLException {
 
 		List<Comment> comments = new ArrayList<Comment>();
 
 		getBookComments.setInt(1, bookId);
+		getBookComments.setInt(2, offset);
+		getBookComments.setInt(3, limit);
 		ResultSet rs = getBookComments.executeQuery();
 
 		while (rs.next()) {
@@ -120,6 +146,25 @@ public class CommentsDAO {
 
 			
 			deleteComment.execute();
+			
+		} catch (SQLException e) {
+
+			return false;
+		}
+		return true;
+		
+	}
+	
+	
+	public boolean updateComment(int commentId, String comment) {
+
+		
+		try {
+
+			updateComment.setNString(1, comment);
+			updateComment.setInt(2, commentId);
+			
+			updateComment.execute();
 			
 		} catch (SQLException e) {
 

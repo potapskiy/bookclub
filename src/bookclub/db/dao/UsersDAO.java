@@ -16,8 +16,9 @@ public class UsersDAO {
 
 	Connection conn = null;
 
-	PreparedStatement isUserRegistred;
+	PreparedStatement isUserExists;
 	PreparedStatement insertUser;
+	PreparedStatement isUserRegistred;
 
 	public UsersDAO() {
 
@@ -29,10 +30,14 @@ public class UsersDAO {
 						.lookup(DBParams.JDBC_ENV);
 				conn = ds.getConnection();
 
-				isUserRegistred = conn.prepareStatement("SELECT * FROM "
+				isUserExists = conn.prepareStatement("SELECT * FROM "
 						+ DBParams.usersTable + " WHERE login = ? LIMIT 1");
 				
-				insertUser = conn.prepareStatement("INSERT INTO " + DBParams.usersTable
+				isUserRegistred = conn.prepareStatement("SELECT * FROM "
+						+ DBParams.usersTable + " WHERE login = ? AND password = ? LIMIT 1");
+
+				insertUser = conn.prepareStatement("INSERT INTO "
+						+ DBParams.usersTable
 						+ " (login, password, name, surname) VALUES (?,?,?,?)");
 
 			} catch (Exception e) {
@@ -67,14 +72,26 @@ public class UsersDAO {
 
 	public boolean isUserRegistred(String userLogin) throws SQLException {
 
+		isUserExists.setNString(1, userLogin);
+		ResultSet rs = isUserExists.executeQuery();
 
+		if (rs.next()) {
+			return true;
+		}
 
-			isUserRegistred.setNString(1, userLogin);
-			ResultSet rs = isUserRegistred.executeQuery();
+		return false;
 
-			if (rs.next()) {
-				return true;
-			}
+	}
+	
+	public boolean isUserDataCorrect(String userLogin, String userPassword) throws SQLException {
+
+		isUserRegistred.setNString(1, userLogin);
+		isUserRegistred.setNString(2, userPassword);
+		ResultSet rs = isUserRegistred.executeQuery();
+
+		if (rs.next()) {
+			return true;
+		}
 
 		return false;
 
@@ -83,22 +100,21 @@ public class UsersDAO {
 	public boolean insertUser(String login, String password, String name,
 			String surname) {
 
-		
 		try {
 
 			insertUser.setNString(1, login);
 			insertUser.setNString(2, password);
 			insertUser.setNString(3, name);
 			insertUser.setNString(4, surname);
-			
+
 			insertUser.execute();
-			
+
 		} catch (SQLException e) {
 
 			return false;
 		}
 		return true;
-		
+
 	}
 
 }
