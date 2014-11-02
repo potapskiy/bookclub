@@ -5,12 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import bookclub.db.DBParams;
+import bookclub.entities.Book;
+import bookclub.entities.Comment;
+import bookclub.entities.Shelf;
 
 public class ShelfsDAO {
 
@@ -21,6 +26,10 @@ public class ShelfsDAO {
 	PreparedStatement deleteShelfBooks;
 	PreparedStatement insertBookToShelf;
 	PreparedStatement deleteBookFromShelf;
+	PreparedStatement getUserShelfs;
+	PreparedStatement getUserShelfsCount;
+	PreparedStatement getBooksOnShelfCount;
+	PreparedStatement getBooksOnShelf;
 	public ShelfsDAO() {
 
 		try {
@@ -34,20 +43,38 @@ public class ShelfsDAO {
 				insertShelf = conn
 						.prepareStatement("INSERT INTO " + DBParams.shelfsTable
 								+ " (userId, name) VALUES (?,?)");
-				
-				deleteShelf = conn.prepareStatement("DELETE * FROM " + DBParams.shelfsTable
-						+ " WHERE shelfId = ?");
-				
-				deleteShelfBooks = conn.prepareStatement("DELETE * FROM " + DBParams.booksOnShelfs
-						+ " WHERE shelfId = ?");
-				
-				insertBookToShelf = conn
-						.prepareStatement("INSERT INTO " + DBParams.booksOnShelfs
-								+ " (shelfId, bookId) VALUES (?,?)");
-				
-				deleteBookFromShelf = conn
-						.prepareStatement("DELETE * FROM " + DBParams.booksOnShelfs
-								+ " WHERE shelfId =? AND bookId = ?");
+
+				deleteShelf = conn.prepareStatement("DELETE * FROM "
+						+ DBParams.shelfsTable + " WHERE shelfId = ?");
+
+				deleteShelfBooks = conn.prepareStatement("DELETE * FROM "
+						+ DBParams.booksOnShelfs + " WHERE shelfId = ?");
+
+				insertBookToShelf = conn.prepareStatement("INSERT INTO "
+						+ DBParams.booksOnShelfs
+						+ " (shelfId, bookId) VALUES (?,?)");
+
+				deleteBookFromShelf = conn.prepareStatement("DELETE * FROM "
+						+ DBParams.booksOnShelfs
+						+ " WHERE shelfId =? AND bookId = ?");
+
+				getUserShelfs = conn.prepareStatement("SELECT * FROM "
+						+ DBParams.shelfsTable + " WHERE userId = ? limit ?,?");
+
+				getUserShelfsCount = conn
+						.prepareStatement("SELECT COUNT(*) as com_count FROM "
+								+ DBParams.shelfsTable + " WHERE userId = ?");
+
+				getBooksOnShelfCount = conn
+						.prepareStatement("SELECT COUNT(*) as com_count FROM "
+								+ DBParams.booksOnShelfs + " WHERE shelfId = ?");
+
+				getBooksOnShelf = conn
+						.prepareStatement("SELECT bs.bookId, b.name as bookName, a.name as authorName FROM "
+								+ DBParams.booksOnShelfs + " bs\r\n" + 
+								"LEFT JOIN " + DBParams.booksTable + " u ON bs.bookId=b.bookId \r\n" +
+								"LEFT JOIN " + DBParams.authorsTable + " a ON b.authorId=a.authorId \r\n"
+								+ " WHERE shelfId = ? limit ?,?");
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -174,6 +201,69 @@ public class ShelfsDAO {
 		}
 		return true;
 		
+	}
+	
+	public int getUserShelfsCount(int userId) throws SQLException {
+
+		getUserShelfsCount.setInt(1, userId);
+		ResultSet rs = getUserShelfsCount.executeQuery();
+		
+		int count = (rs.next()) ? rs.getInt("com_count") : 0; 
+		
+		return count;
+
+	}
+	
+	public List<Shelf> getUserShelfs(int userId, int limit, int offset) throws SQLException {
+
+		List<Shelf> userShelfs = new ArrayList<Shelf>();
+
+		getUserShelfs.setInt(1, userId);
+		getUserShelfs.setInt(2, offset);
+		getUserShelfs.setInt(3, limit);
+		ResultSet rs = getUserShelfs.executeQuery();
+
+		while (rs.next()) {
+
+			userShelfs.add(new Shelf(rs.getInt("shelfId"),userId, rs.getString("name")));
+
+		}
+		
+		return userShelfs;
+
+	}
+	
+	
+	public int getBooksOnShelfCount(int shelfId) throws SQLException {
+
+		getBooksOnShelfCount.setInt(1, shelfId);
+		ResultSet rs = getBooksOnShelfCount.executeQuery();
+		
+		int count = (rs.next()) ? rs.getInt("com_count") : 0; 
+		
+		return count;
+
+	}
+	
+	
+	
+	public List<Book> getBooksOnShelf(int shelfId, int limit, int offset) throws SQLException {
+
+		List<Book> books = new ArrayList<Book>();
+
+		getBooksOnShelf.setInt(1, shelfId);
+		getBooksOnShelf.setInt(2, offset);
+		getBooksOnShelf.setInt(3, limit);
+		ResultSet rs = getBooksOnShelf.executeQuery();
+
+		while (rs.next()) {
+
+			books.add(new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName")));
+
+		}
+		
+		return books;
+
 	}
 
 }

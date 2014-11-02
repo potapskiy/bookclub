@@ -40,6 +40,7 @@ public class AuthorsDAO {
 			st = conn.createStatement();
 			st.execute("CREATE TABLE " + DBParams.authorsTable + " (\r\n" + 
 					"  `authorId` INT NOT NULL AUTO_INCREMENT,\r\n" + 
+					"  `name` VARCHAR(100) NULL,\r\n" +
 					"  `info` TEXT NULL,\r\n" + 
 					"  `mark` FLOAT NOT NULL DEFAULT 0,\r\n" + 
 					"  PRIMARY KEY (`authorId`))\r\n" + 

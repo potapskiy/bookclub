@@ -55,12 +55,14 @@ public class CommentsServlet {
 				jsonComments.add(jsonComment);
 
 			}
+			
+			msg = Messages.OK;
 
 		} catch (Exception e) {
 			msg = Messages.ERROR;
 		}
 
-		msg = Messages.OK;
+		
 		jsonReruest.put("msg", msg);
 		return jsonReruest.toJSONString();
 
