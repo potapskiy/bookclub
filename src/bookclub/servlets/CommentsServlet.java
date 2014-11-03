@@ -3,7 +3,7 @@ package bookclub.servlets;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,7 +22,7 @@ public class CommentsServlet {
 	private CommentsDAO commentsDAO = new CommentsDAO();
 
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("get")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getBookcomments(@HeaderParam("id") int bookId,
@@ -57,6 +57,8 @@ public class CommentsServlet {
 			}
 			
 			msg = Messages.OK;
+			
+			jsonReruest.put("rows", jsonComments);
 
 		} catch (Exception e) {
 			msg = Messages.ERROR;
@@ -70,7 +72,7 @@ public class CommentsServlet {
 	
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("add")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addComment(@HeaderParam("book-id") int bookId, 
@@ -97,7 +99,7 @@ public class CommentsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addComment(@HeaderParam("comment-id") int commentId) {
@@ -122,7 +124,7 @@ public class CommentsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("update")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String updateComment(@HeaderParam("comment-id") int commentId, 

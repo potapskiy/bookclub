@@ -6,12 +6,14 @@ public class Shelf {
 	private int id;
 	private int userId;
 	private String name;
+	private int count;
 	
-	public Shelf(int id, int userId, String name) {
+	public Shelf(int id, int userId, String name, int count) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
+		this.count = count;
 	}
 
 	public int getId() {
@@ -38,4 +40,11 @@ public class Shelf {
 		this.name = name;
 	}
 		
+	public int getCount() {
+		return count;
+	}
+	
+	public void setCount(int count) {
+		this.count = count;
+	}
 }

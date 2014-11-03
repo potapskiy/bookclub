@@ -225,7 +225,9 @@ public class ShelfsDAO {
 
 		while (rs.next()) {
 
-			userShelfs.add(new Shelf(rs.getInt("shelfId"),userId, rs.getString("name")));
+			int shelfId = rs.getInt("shelfId");
+			int bookCount = getBooksOnShelfCount(shelfId); 
+			userShelfs.add(new Shelf(shelfId,userId, rs.getString("name"), bookCount));
 
 		}
 		

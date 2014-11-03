@@ -3,7 +3,7 @@ package bookclub.servlets;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,7 +24,7 @@ public class ShelfsServlet {
 	private ShelfsDAO shelfsDAO = new ShelfsDAO();
 
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("add")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addShelf(@HeaderParam("user-id") int userId,
@@ -61,7 +61,7 @@ public class ShelfsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteShelf(@HeaderParam("shelf-id") int shelfId) {
@@ -85,7 +85,7 @@ public class ShelfsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("addbook")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addBookToShelf(@HeaderParam("shelf-id") int shelfId,
@@ -110,7 +110,7 @@ public class ShelfsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("deletebook")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteBookFromShelf(@HeaderParam("shelf-id") int shelfId,
@@ -135,7 +135,7 @@ public class ShelfsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("user_shelfs")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserShelfs(@HeaderParam("user-id") int userId,
@@ -160,12 +160,13 @@ public class ShelfsServlet {
 				JSONObject jsonShelf = new JSONObject();
 				jsonShelf.put("id", shelf.getId());
 				jsonShelf.put("name", shelf.getName());
-				
+				jsonShelf.put("count", shelf.getCount());
 
 				jsonShelfs.add(jsonShelf);
 
 			}
 			
+			jsonReruest.put("rows", jsonShelfs);
 			msg = Messages.OK;
 			
 		} catch (Exception e) {
@@ -179,7 +180,7 @@ public class ShelfsServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("get_books")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getBooksOnShelf(@HeaderParam("shelf-id") int shelfId,
@@ -210,6 +211,7 @@ public class ShelfsServlet {
 
 			}
 			
+			jsonReruest.put("rows", jsonBooks);
 			msg = Messages.OK;
 			
 		} catch (Exception e) {

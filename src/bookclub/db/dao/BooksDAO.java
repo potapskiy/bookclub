@@ -21,6 +21,8 @@ public class BooksDAO {
 	Connection conn = null;
 	
 	PreparedStatement getPopular;
+	PreparedStatement addLike;
+	PreparedStatement addDislike;
 
 	public BooksDAO() {
 
@@ -39,6 +41,11 @@ public class BooksDAO {
 								"LEFT JOIN " + DBParams.authorsTable + " a ON b.authorId=a.authorId \r\n"
 								+ " ORDER BY likes DESC limit ?,?");
 				
+				addLike = conn.prepareStatement("UPDATE " + DBParams.booksTable 
+						+ " SET likes=likes+1 WHERE bookId = ?");
+				
+				addDislike = conn.prepareStatement("UPDATE " + DBParams.booksTable 
+						+ " SET dislikes=dislikes+1 WHERE bookId = ?");
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -89,6 +96,35 @@ public class BooksDAO {
 		
 		return books;
 
+	}
+	
+	
+	public boolean addLike(int bookID) {
+		try {
+
+			addLike.setInt(1, bookID);
+			
+			addLike.execute();
+			
+		} catch (SQLException e) {
+
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean addDislike(int bookID) {
+		try {
+
+			addDislike.setInt(1, bookID);
+			
+			addDislike.execute();
+			
+		} catch (SQLException e) {
+
+			return false;
+		}
+		return true;
 	}
 
 }

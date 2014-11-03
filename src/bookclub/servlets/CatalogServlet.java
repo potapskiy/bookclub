@@ -4,7 +4,7 @@ package bookclub.servlets;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,7 +24,7 @@ public class CatalogServlet {
 	private BooksDAO booksDAO = new BooksDAO();
 	
 	@SuppressWarnings("unchecked")
-	@GET
+	@POST
 	@Path("popular")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserShelfs(
@@ -52,6 +52,7 @@ public class CatalogServlet {
 
 			}
 			
+			jsonReruest.put("data", jsonBooks);
 			msg = Messages.OK;
 			
 		} catch (Exception e) {
@@ -65,8 +66,91 @@ public class CatalogServlet {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("like")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String addLike(@HeaderParam("book-id") int bookId) {
+		
+		JSONObject jsonReruest = new JSONObject();
+
+		String msg;
+
+		try {
+
+			booksDAO.addLike(bookId);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("dislike")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String addDislike(@HeaderParam("book-id") int bookId) {
+		
+		JSONObject jsonReruest = new JSONObject();
+
+		String msg;
+
+		try {
+
+			booksDAO.addDislike(bookId);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
 	
 
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("book")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getBook(@HeaderParam("book-id") int bookId) {
+		JSONObject jsonReruest = new JSONObject();
+
+		String msg;
+
+		try {
+			
+			
+			Book book = booksDAO.getBook(bookId);
+			
+			JSONObject jsonBook = new JSONObject();
+			jsonBook.put("id", book.getId());
+			jsonBook.put("book-name", book.getBookName());
+			jsonBook.put("author-name", book.getAuthorName());
+
+			
+			jsonReruest.put("data", jsonBook);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
 	
 	
 
