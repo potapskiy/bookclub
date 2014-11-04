@@ -67,7 +67,7 @@ public class CommentsDAO {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			st.execute("CREATE TABLE " + DBParams.commentsTable + " (\r\n"
+			st.execute("CREATE TABLE IF NOT EXISTS " + DBParams.commentsTable + " (\r\n"
 					+ "  `commentId` INT NOT NULL AUTO_INCREMENT,\r\n"
 					+ "  `userId` INT NOT NULL,\r\n"
 					+ "  `bookId` INT NOT NULL,\r\n"

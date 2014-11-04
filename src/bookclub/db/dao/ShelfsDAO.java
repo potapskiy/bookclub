@@ -91,7 +91,7 @@ public class ShelfsDAO {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			st.execute("CREATE TABLE " + DBParams.shelfsTable + " (\r\n"
+			st.execute("CREATE TABLE IF NOT EXISTS " + DBParams.shelfsTable + " (\r\n"
 					+ "  `shelfId` INT NOT NULL AUTO_INCREMENT,\r\n"
 					+ "  `userId` INT NOT NULL,\r\n"
 					+ "  `name` VARCHAR(45) NOT NULL,\r\n"
@@ -109,9 +109,9 @@ public class ShelfsDAO {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			st.execute("CREATE TABLE " + DBParams.booksOnShelfs + " (\r\n"
+			st.execute("CREATE TABLE IF NOT EXISTS " + DBParams.booksOnShelfs + " (\r\n"
 					+ "  `shelfId` INT NOT NULL,\r\n"
-					+ "  `bookId` INT NOT NULL,\r\n" + "  )\r\n"
+					+ "  `bookId` INT NOT NULL\r\n" + "  )\r\n"
 					+ "ENGINE = InnoDB\r\n"
 					+ "DEFAULT CHARACTER SET = utf8\r\n"
 					+ "COLLATE = utf8_general_ci;");

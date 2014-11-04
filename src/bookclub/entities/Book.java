@@ -8,6 +8,7 @@ public class Book {
 	private String bookInfo;
 	private int likes;
 	private int dislikes;
+	private String genre;
 	
 	
 	public Book() {
@@ -17,6 +18,7 @@ public class Book {
 		this.bookInfo = "";
 		this.likes = 0;
 		this.dislikes = 0;
+		this.genre = "";
 	}
 	
 	
@@ -28,6 +30,7 @@ public class Book {
 		this.bookInfo = "";
 		this.likes = 0;
 		this.dislikes = 0;
+		this.genre = "";
 	}
 	
 	public Book(int id, String bookName, String authorName, String bookInfo,
@@ -39,6 +42,7 @@ public class Book {
 		this.bookInfo = bookInfo;
 		this.likes = likes;
 		this.dislikes = dislikes;
+		this.genre = "";
 	}
 
 
@@ -96,6 +100,13 @@ public class Book {
 		this.dislikes = dislikes;
 	}
 	
+	public String getGenre() {
+		return genre;
+	}
+	
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
 	
 	
 	

@@ -23,6 +23,7 @@ public class BooksDAO {
 	PreparedStatement getPopular;
 	PreparedStatement addLike;
 	PreparedStatement addDislike;
+	PreparedStatement getBook;
 
 	public BooksDAO() {
 
@@ -46,6 +47,15 @@ public class BooksDAO {
 				
 				addDislike = conn.prepareStatement("UPDATE " + DBParams.booksTable 
 						+ " SET dislikes=dislikes+1 WHERE bookId = ?");
+				
+				getBook = conn.prepareStatement("SELECT "
+						+ "b.bookId, b.name as bookName, b.likes, b.dislikes, "
+						+ "b.info, b.genre, a.name as authorName FROM "
+						+ DBParams.booksTable + " b\r\n" + "LEFT JOIN "
+						+ DBParams.authorsTable
+						+ " a ON b.authorId=a.authorId \r\n"
+						+ " WHERE bookId = ?");
+					
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -60,7 +70,7 @@ public class BooksDAO {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			st.execute("CREATE TABLE "+ DBParams.booksTable+" (\r\n" + 
+			st.execute("CREATE TABLE IF NOT EXISTS "+ DBParams.booksTable+" (\r\n" + 
 					"  `bookId` INT NOT NULL AUTO_INCREMENT,\r\n" + 
 					"  `authorId` INT NOT NULL,\r\n" +
 					"  `name` VARCHAR(100) NULL,\r\n" + 
@@ -126,5 +136,27 @@ public class BooksDAO {
 		}
 		return true;
 	}
+	
+	
+	public Book getBook(int bookId) throws SQLException {
+
+		Book book = null;
+		
+		getBook.setInt(1, bookId);
+		ResultSet rs = getBook.executeQuery();
+
+		if (rs.next()) {
+
+			book = new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName"));
+			book.setBookInfo(rs.getNString("info"));
+			book.setLikes(rs.getInt("likes"));
+			book.setLikes(rs.getInt("dislikes"));
+
+		}
+		
+		return book;
+
+	}
+	
 
 }

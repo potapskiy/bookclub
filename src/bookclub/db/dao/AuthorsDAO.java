@@ -38,7 +38,7 @@ public class AuthorsDAO {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			st.execute("CREATE TABLE " + DBParams.authorsTable + " (\r\n" + 
+			st.execute("CREATE TABLE IF NOT EXISTS " + DBParams.authorsTable + " (\r\n" + 
 					"  `authorId` INT NOT NULL AUTO_INCREMENT,\r\n" + 
 					"  `name` VARCHAR(100) NULL,\r\n" +
 					"  `info` TEXT NULL,\r\n" + 

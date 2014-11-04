@@ -1,5 +1,6 @@
 package bookclub.servlets;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -21,10 +22,10 @@ public class UsersServlet {
 	@POST
 	@Path("register")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String registerUser(@HeaderParam("login") String login,
-			@HeaderParam("password") String password,
-			@HeaderParam("name") String name,
-			@HeaderParam("surname") String surname) {
+	public String registerUser(@FormParam("login") String login,
+			@FormParam("password") String password,
+			@FormParam("name") String name,
+			@FormParam("surname") String surname) {
 
 		JSONObject jsonReruest = new JSONObject();
 

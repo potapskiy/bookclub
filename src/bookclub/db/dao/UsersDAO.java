@@ -56,7 +56,7 @@ public class UsersDAO {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			st.execute("CREATE TABLE " + DBParams.usersTable + " (\r\n"
+			st.execute("CREATE TABLE IF NOT EXISTS " + DBParams.usersTable + " (\r\n"
 					+ "  `userId` INT NOT NULL AUTO_INCREMENT,\r\n"
 					+ "  `login` VARCHAR(45) NOT NULL,\r\n"
 					+ "  `password` VARCHAR(256) NOT NULL,\r\n"
