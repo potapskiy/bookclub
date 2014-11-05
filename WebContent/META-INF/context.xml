@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/Reteko_Web_Front">
+<Context antiJARLocking="true" path="/bookclub">
    <Resource name="jdbc/DBBookClub" auth="Container"
             type="javax.sql.DataSource" username="root" password="root"
             driverClassName="com.mysql.jdbc.Driver"  maxWait="10000"

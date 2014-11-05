@@ -35,7 +35,7 @@ public class UsersServlet {
 
 			if (!usersDAO.isUserRegistred(login)) {
 				int id = usersDAO.insertUser(login, password, name, surname);
-
+				if (id == 0) msg = Messages.ERROR;
 				
 				JSONObject jsonData = new JSONObject();
 
@@ -65,8 +65,8 @@ public class UsersServlet {
 	@POST
 	@Path("check")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String checkUser(@HeaderParam("login") String login,
-			@HeaderParam("password") String password) {
+	public String checkUser(@FormParam("login") String login,
+			@FormParam("password") String password) {
 
 		JSONObject jsonReruest = new JSONObject();
 

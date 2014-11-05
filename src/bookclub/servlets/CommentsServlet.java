@@ -3,6 +3,7 @@ package bookclub.servlets;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -25,9 +26,9 @@ public class CommentsServlet {
 	@POST
 	@Path("get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getBookcomments(@HeaderParam("id") int bookId,
-			@DefaultValue("10")@HeaderParam("limit") int limit,
-			@DefaultValue("0")@HeaderParam("offset") int offset) {
+	public String getBookcomments(@FormParam("id") int bookId,
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset) {
 
 		JSONObject jsonReruest = new JSONObject();
 
@@ -75,9 +76,9 @@ public class CommentsServlet {
 	@POST
 	@Path("add")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addComment(@HeaderParam("book-id") int bookId, 
-			@HeaderParam("user-id") int userId,
-			@HeaderParam("comment") String comment) {
+	public String addComment(@FormParam("book-id") int bookId, 
+			@FormParam("user-id") int userId,
+			@FormParam("comment") String comment) {
 
 		JSONObject jsonReruest = new JSONObject();
 
@@ -102,7 +103,7 @@ public class CommentsServlet {
 	@POST
 	@Path("delete")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addComment(@HeaderParam("comment-id") int commentId) {
+	public String addComment(@FormParam("comment-id") int commentId) {
 
 		JSONObject jsonReruest = new JSONObject();
 
@@ -127,8 +128,8 @@ public class CommentsServlet {
 	@POST
 	@Path("update")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateComment(@HeaderParam("comment-id") int commentId, 
-			@HeaderParam("comment") String comment) {
+	public String updateComment(@FormParam("comment-id") int commentId, 
+			@FormParam("comment") String comment) {
 
 		JSONObject jsonReruest = new JSONObject();
 

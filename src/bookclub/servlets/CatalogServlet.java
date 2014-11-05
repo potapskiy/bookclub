@@ -4,6 +4,7 @@ package bookclub.servlets;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -28,8 +29,8 @@ public class CatalogServlet {
 	@Path("popular")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserShelfs(
-			@DefaultValue("10")@HeaderParam("limit") int limit,
-			@DefaultValue("0")@HeaderParam("offset") int offset) {
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
@@ -52,7 +53,7 @@ public class CatalogServlet {
 
 			}
 			
-			jsonReruest.put("data", jsonBooks);
+			jsonReruest.put("rows", jsonBooks);
 			msg = Messages.OK;
 			
 		} catch (Exception e) {
@@ -70,7 +71,7 @@ public class CatalogServlet {
 	@POST
 	@Path("like")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addLike(@HeaderParam("book-id") int bookId) {
+	public String addLike(@FormParam("book-id") int bookId) {
 		
 		JSONObject jsonReruest = new JSONObject();
 
@@ -96,7 +97,7 @@ public class CatalogServlet {
 	@POST
 	@Path("dislike")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addDislike(@HeaderParam("book-id") int bookId) {
+	public String addDislike(@FormParam("book-id") int bookId) {
 		
 		JSONObject jsonReruest = new JSONObject();
 
@@ -123,7 +124,7 @@ public class CatalogServlet {
 	@POST
 	@Path("book")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getBook(@HeaderParam("book-id") int bookId) {
+	public String getBook(@FormParam("book-id") int bookId) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;

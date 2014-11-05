@@ -3,6 +3,7 @@ package bookclub.servlets;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -27,8 +28,8 @@ public class ShelfsServlet {
 	@POST
 	@Path("add")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addShelf(@HeaderParam("user-id") int userId,
-			@HeaderParam("name") String name) {
+	public String addShelf(@FormParam("user-id") int userId,
+			@FormParam("name") String name) {
 
 
 		JSONObject jsonReruest = new JSONObject();
@@ -64,7 +65,7 @@ public class ShelfsServlet {
 	@POST
 	@Path("delete")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteShelf(@HeaderParam("shelf-id") int shelfId) {
+	public String deleteShelf(@FormParam("shelf-id") int shelfId) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
@@ -88,8 +89,8 @@ public class ShelfsServlet {
 	@POST
 	@Path("addbook")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addBookToShelf(@HeaderParam("shelf-id") int shelfId,
-			@HeaderParam("book-id") int bookId) {
+	public String addBookToShelf(@FormParam("shelf-id") int shelfId,
+			@FormParam("book-id") int bookId) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
@@ -113,8 +114,8 @@ public class ShelfsServlet {
 	@POST
 	@Path("deletebook")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteBookFromShelf(@HeaderParam("shelf-id") int shelfId,
-			@HeaderParam("book-id") int bookId) {
+	public String deleteBookFromShelf(@FormParam("shelf-id") int shelfId,
+			@FormParam("book-id") int bookId) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
@@ -138,9 +139,9 @@ public class ShelfsServlet {
 	@POST
 	@Path("user_shelfs")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserShelfs(@HeaderParam("user-id") int userId,
-			@DefaultValue("10")@HeaderParam("limit") int limit,
-			@DefaultValue("0")@HeaderParam("offset") int offset) {
+	public String getUserShelfs(@FormParam("user-id") int userId,
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
@@ -183,9 +184,9 @@ public class ShelfsServlet {
 	@POST
 	@Path("get_books")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getBooksOnShelf(@HeaderParam("shelf-id") int shelfId,
-			@DefaultValue("10")@HeaderParam("limit") int limit,
-			@DefaultValue("0")@HeaderParam("offset") int offset) {
+	public String getBooksOnShelf(@FormParam("shelf-id") int shelfId,
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset) {
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
