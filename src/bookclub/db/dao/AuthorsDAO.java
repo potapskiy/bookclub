@@ -2,6 +2,8 @@ package bookclub.db.dao;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -15,7 +17,9 @@ public class AuthorsDAO {
 	
 	Connection conn = null;
 
-		public AuthorsDAO() {
+	PreparedStatement insertAuthor;
+	
+	public AuthorsDAO() {
 
 		try {
 			InitialContext initialContext = new InitialContext();
@@ -24,6 +28,10 @@ public class AuthorsDAO {
 				DataSource ds = (DataSource) initialContext
 						.lookup(DBParams.JDBC_ENV);
 				conn = ds.getConnection();
+				
+				insertAuthor = conn.prepareStatement("INSERT INTO "
+						+ DBParams.authorsTable
+						+ " (name, info) VALUES (?,?)");
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -51,6 +59,27 @@ public class AuthorsDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+	}
+	
+	
+	public boolean insertAuthor(String name, String info) {
+
+		try {
+
+			insertAuthor.setNString(1, name);
+			insertAuthor.setNString(2, info);
+		
+			insertAuthor.executeUpdate();
+
+	        
+
+		} catch (SQLException e) {
+
+			return false;
+		}
+	
+		return true;
 
 	}
 
