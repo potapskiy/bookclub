@@ -25,13 +25,14 @@ public class AuthorsServlet {
 	@POST
 	@Path("add")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String registerUser(@FormParam("authorName") String name,
+	public String addAuthor(@FormParam("authorName") String name,
 			@FormParam("authorInfo") String info) throws URISyntaxException {
 
 		JSONObject jsonReruest = new JSONObject();
 
 		String msg;
 
+		
 		try {
 
 			authorsDAO.insertAuthor(name, info);
@@ -43,6 +44,7 @@ public class AuthorsServlet {
 
 		jsonReruest.put("msg", msg);
 		
+		System.out.println(jsonReruest.toJSONString());
 	    return jsonReruest.toJSONString();
 
 	}

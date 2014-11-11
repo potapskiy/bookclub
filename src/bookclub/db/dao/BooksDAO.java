@@ -24,7 +24,7 @@ public class BooksDAO {
 	PreparedStatement addLike;
 	PreparedStatement addDislike;
 	PreparedStatement getBook;
-
+	PreparedStatement insertBook;
 	public BooksDAO() {
 
 		try {
@@ -55,7 +55,10 @@ public class BooksDAO {
 						+ DBParams.authorsTable
 						+ " a ON b.authorId=a.authorId \r\n"
 						+ " WHERE bookId = ?");
-					
+				
+				insertBook = conn.prepareStatement("INSERT INTO "
+						+ DBParams.booksTable
+						+ " (name, authorId, genre, info) VALUES (?,?,?,?)");
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -155,6 +158,37 @@ public class BooksDAO {
 		}
 		
 		return book;
+
+	}
+	
+	public boolean insertBook(String bookTitle, String bookAuthor,
+			String bookGenre, String info) {
+
+		try {
+			
+			AuthorsDAO authorsDAO = new AuthorsDAO();
+			
+			int authorID = authorsDAO.getAuthorIDByName(bookAuthor);
+			
+			
+			System.out.println("Book: " + bookTitle+"\n Author: "
+			+ authorID+"\n Genre: "+ bookGenre+"\n Info: "+  info);
+			
+			insertBook.setNString(1, bookTitle);
+			insertBook.setInt(2, authorID);
+			insertBook.setNString(3, bookGenre);
+			insertBook.setNString(4, info);
+		
+			insertBook.executeUpdate();
+
+	        
+
+		} catch (SQLException e) {
+
+			return false;
+		}
+	
+		return true;
 
 	}
 	

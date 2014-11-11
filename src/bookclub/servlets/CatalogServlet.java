@@ -1,6 +1,7 @@
 package bookclub.servlets;
 
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
@@ -152,6 +153,38 @@ public class CatalogServlet {
 		return jsonReruest.toJSONString();
 
 	}
+
+
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("add")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String addBook(@FormParam("bookTitle") String bookTitle,
+			@FormParam("bookAuthor") String bookAuthor,
+			@FormParam("bookGenre") String bookGenre,
+			@FormParam("bookInfo") String info) throws URISyntaxException {
+
+		JSONObject jsonReruest = new JSONObject();
+		String msg;
+
+		try {
+			
+			booksDAO.insertBook(bookTitle, bookAuthor,bookGenre, info);
+			msg = Messages.OK;
+
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		jsonReruest.put("msg", msg);
+
+		System.out.println(jsonReruest.toJSONString());
+		return jsonReruest.toJSONString();
+
+	}
+	
+	
+	
 	
 	
 
