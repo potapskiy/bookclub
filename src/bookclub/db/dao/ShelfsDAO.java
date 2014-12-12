@@ -22,6 +22,7 @@ public class ShelfsDAO {
 	Connection conn = null;
 
 	PreparedStatement insertShelf;
+	PreparedStatement isBookExists;
 	PreparedStatement updateShelf;
 	PreparedStatement getShelf;
 	PreparedStatement deleteShelf;
@@ -49,6 +50,10 @@ public class ShelfsDAO {
 
 				getShelf = conn.prepareStatement("SELECT * FROM "
 						+ DBParams.shelfsTable + " WHERE shelfId = ?");
+
+				isBookExists = conn.prepareStatement("SELECT * FROM "
+						+ DBParams.booksOnShelfs
+						+ " WHERE shelfId =? AND bookId = ?");
 
 				updateShelf = conn.prepareStatement("UPDATE "
 						+ DBParams.shelfsTable
@@ -226,7 +231,27 @@ public class ShelfsDAO {
 
 	}
 
+	public boolean bookOnShelfExists(int shelfId, int bookId) {
+		try {
+
+			isBookExists.setInt(1, shelfId);
+			isBookExists.setInt(2, bookId);
+			ResultSet rs = isBookExists.executeQuery();
+		
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		
+
+	}
+
 	public boolean addBook(int shelfId, int bookId) {
+
+		if (bookOnShelfExists(shelfId, bookId))
+			return true;
 
 		try {
 
@@ -314,7 +339,8 @@ public class ShelfsDAO {
 		while (rs.next()) {
 
 			books.add(new Book(rs.getInt("bookId"), rs.getString("bookName"),
-					rs.getString("authorName"),"",rs.getInt("likes"),rs.getInt("dislikes"),rs.getString("genre")));
+					rs.getString("authorName"), "", rs.getInt("likes"), rs
+							.getInt("dislikes"), rs.getString("genre")));
 
 		}
 
