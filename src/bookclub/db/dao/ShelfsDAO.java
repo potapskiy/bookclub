@@ -52,7 +52,7 @@ public class ShelfsDAO {
 
 				updateShelf = conn.prepareStatement("UPDATE "
 						+ DBParams.shelfsTable
-						+ " SET name = ? WHERE shelfId = ?)");
+						+ " SET name = ? WHERE shelfId = ?");
 
 				deleteShelf = conn.prepareStatement("DELETE FROM "
 						+ DBParams.shelfsTable + " WHERE shelfId = ?");
