@@ -26,7 +26,7 @@ public class CommentsServlet {
 	@POST
 	@Path("get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getBookcomments(@FormParam("id") int bookId,
+	public String getBookcomments(@FormParam("book-id") int bookId,
 			@DefaultValue("10")@FormParam("limit") int limit,
 			@DefaultValue("0")@FormParam("offset") int offset) {
 
