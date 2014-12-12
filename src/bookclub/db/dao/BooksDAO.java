@@ -249,7 +249,7 @@ public class BooksDAO {
 			book = new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName"));
 			book.setBookInfo(rs.getNString("info"));
 			book.setLikes(rs.getInt("likes"));
-			book.setLikes(rs.getInt("dislikes"));
+			book.setDislikes(rs.getInt("dislikes"));
 			book.setGenre(rs.getString("genre"));
 
 		}
