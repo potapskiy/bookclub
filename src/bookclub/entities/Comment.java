@@ -6,6 +6,7 @@ public class Comment {
 	private int userId;
 	private String userName;
 	private String userSurname;
+	private String userLogin;
 	private String commentText;
 	
 	public Comment(int commentId, String userName, String userSurname, String commentText) {
@@ -13,6 +14,15 @@ public class Comment {
 		this.commentId = commentId;
 		this.userName = userName;
 		this.userSurname = userSurname;
+		this.commentText = commentText;
+	}
+	
+	public Comment(int commentId, String userName, String userSurname, String login, String commentText) {
+		super();
+		this.commentId = commentId;
+		this.userName = userName;
+		this.userSurname = userSurname;
+		this.userLogin = login;
 		this.commentText = commentText;
 	}
 	

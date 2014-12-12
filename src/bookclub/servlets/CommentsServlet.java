@@ -50,6 +50,7 @@ public class CommentsServlet {
 				jsonComment.put("id", comment.getCommentId());
 				jsonComment.put("name", comment.getUserName());
 				jsonComment.put("surname", comment.getUserSurname());
+				jsonComment.put("login", comment.getUserLogin());
 				jsonComment.put("comment", comment.getCommentText());
 				
 
