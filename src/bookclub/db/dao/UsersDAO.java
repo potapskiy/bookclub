@@ -20,6 +20,7 @@ public class UsersDAO {
 	PreparedStatement selectUserByLogin;
 	PreparedStatement insertUser;
 	PreparedStatement isUserRegistred;
+	PreparedStatement updateUser;
 
 	public UsersDAO() {
 
@@ -41,6 +42,10 @@ public class UsersDAO {
 						+ DBParams.usersTable
 						+ " (login, password, name, surname) VALUES (?,?,?,?)",
 						Statement.RETURN_GENERATED_KEYS);
+				
+				updateUser = conn.prepareStatement("UPDATE "
+						+ DBParams.usersTable
+						+ " SET password = ?, name = ?, surname = ? WHERE login = ?");
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -131,6 +136,28 @@ public class UsersDAO {
 			return 0;
 		}
 	
+
+	}
+	
+	public boolean updateUser(String login, String password, String name,
+			String surname) {
+
+		try {
+
+			
+			updateUser.setNString(1, password);
+			updateUser.setNString(2, name);
+			updateUser.setNString(3, surname);
+			updateUser.setNString(4, login);
+			
+			updateUser.executeUpdate();
+
+		} catch (SQLException e) {
+
+			return false;
+		}
+	
+		return true;
 
 	}
 	

@@ -29,12 +29,14 @@ public class CatalogServlet {
 	@POST
 	@Path("popular")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserShelfs(
-			@DefaultValue("10")@FormParam("limit") int limit,
+	public String getPopularBooks(
+			@DefaultValue("5")@FormParam("limit") int limit,
 			@DefaultValue("0")@FormParam("offset") int offset) {
 		JSONObject jsonReruest = new JSONObject();
-
+		int count = 0;
 		String msg;
+		
+		
 
 		try {
 			
@@ -49,12 +51,18 @@ public class CatalogServlet {
 				jsonBook.put("id", book.getId());
 				jsonBook.put("book-name", book.getBookName());
 				jsonBook.put("author-name", book.getAuthorName());
+				jsonBook.put("info",book.getBookInfo());
+				jsonBook.put("likes", book.getLikes());
+				jsonBook.put("dislikes", book.getDislikes());
+				jsonBook.put("genre", book.getGenre());
 
 				jsonBooks.add(jsonBook);
 
+				count++;
 			}
 			
 			jsonReruest.put("rows", jsonBooks);
+			jsonReruest.put("total_books", count);
 			msg = Messages.OK;
 			
 		} catch (Exception e) {
@@ -67,6 +75,160 @@ public class CatalogServlet {
 
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getSearch(
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset,
+			@FormParam("search") String search) {
+		JSONObject jsonReruest = new JSONObject();
+		int count = 0;
+		String msg;
+		
+		
+
+		try {
+			
+			
+			List<Book> popularBooks = booksDAO.searchBooks(search, limit, offset);
+			
+			JSONArray jsonBooks = new JSONArray();
+
+			for (Book book : popularBooks) {
+
+				JSONObject jsonBook = new JSONObject();
+				jsonBook.put("id", book.getId());
+				jsonBook.put("book-name", book.getBookName());
+				jsonBook.put("author-name", book.getAuthorName());
+				jsonBook.put("info",book.getBookInfo());
+				jsonBook.put("likes", book.getLikes());
+				jsonBook.put("dislikes", book.getDislikes());
+				jsonBook.put("genre", book.getGenre());
+
+				jsonBooks.add(jsonBook);
+				count++;
+
+			}
+			
+			jsonReruest.put("rows", jsonBooks);
+			jsonReruest.put("total_books", count);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("search_by_genre")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getSearchByGenre(
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset,
+			@FormParam("genre") String genre) {
+		JSONObject jsonReruest = new JSONObject();
+		int count = 0;
+		String msg;
+		
+		
+
+		try {
+			
+			
+			List<Book> popularBooks = booksDAO.searchBooksByGenre(genre, limit, offset);
+			
+			JSONArray jsonBooks = new JSONArray();
+
+			for (Book book : popularBooks) {
+
+				JSONObject jsonBook = new JSONObject();
+				jsonBook.put("id", book.getId());
+				jsonBook.put("book-name", book.getBookName());
+				jsonBook.put("author-name", book.getAuthorName());
+				jsonBook.put("info",book.getBookInfo());
+				jsonBook.put("likes", book.getLikes());
+				jsonBook.put("dislikes", book.getDislikes());
+				jsonBook.put("genre", book.getGenre());
+
+				jsonBooks.add(jsonBook);
+				count++;
+
+			}
+			
+			jsonReruest.put("rows", jsonBooks);
+			jsonReruest.put("total_books", count);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("search_by_genre_and_name")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getSearchByGenreAndName(
+			@DefaultValue("10")@FormParam("limit") int limit,
+			@DefaultValue("0")@FormParam("offset") int offset,
+			@FormParam("genre") String genre,
+			@FormParam("name") String name) {
+		JSONObject jsonReruest = new JSONObject();
+		int count = 0;
+		String msg;
+		
+		
+
+		try {
+			
+			
+			List<Book> popularBooks = booksDAO.searchBooksByGenreAndName(genre, name, limit, offset);
+			
+			JSONArray jsonBooks = new JSONArray();
+
+			for (Book book : popularBooks) {
+
+				JSONObject jsonBook = new JSONObject();
+				jsonBook.put("id", book.getId());
+				jsonBook.put("book-name", book.getBookName());
+				jsonBook.put("author-name", book.getAuthorName());
+				jsonBook.put("info",book.getBookInfo());
+				jsonBook.put("likes", book.getLikes());
+				jsonBook.put("dislikes", book.getDislikes());
+				jsonBook.put("genre", book.getGenre());
+
+				jsonBooks.add(jsonBook);
+				count++;
+
+			}
+			
+			jsonReruest.put("rows", jsonBooks);
+			jsonReruest.put("total_books", count);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
 	
 	@SuppressWarnings("unchecked")
 	@POST
@@ -139,6 +301,10 @@ public class CatalogServlet {
 			jsonBook.put("id", book.getId());
 			jsonBook.put("book-name", book.getBookName());
 			jsonBook.put("author-name", book.getAuthorName());
+			jsonBook.put("info",book.getBookInfo());
+			jsonBook.put("likes", book.getLikes());
+			jsonBook.put("dislikes", book.getDislikes());
+			jsonBook.put("genre", book.getGenre());
 
 			
 			jsonReruest.put("data", jsonBook);

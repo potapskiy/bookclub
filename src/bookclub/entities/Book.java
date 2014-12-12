@@ -34,7 +34,7 @@ public class Book {
 	}
 	
 	public Book(int id, String bookName, String authorName, String bookInfo,
-			int likes, int dislikes) {
+			int likes, int dislikes, String genre) {
 		super();
 		this.id = id;
 		this.bookName = bookName;
@@ -42,7 +42,7 @@ public class Book {
 		this.bookInfo = bookInfo;
 		this.likes = likes;
 		this.dislikes = dislikes;
-		this.genre = "";
+		this.genre = genre;
 	}
 
 

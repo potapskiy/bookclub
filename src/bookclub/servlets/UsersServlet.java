@@ -1,5 +1,6 @@
 package bookclub.servlets;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.HeaderParam;
@@ -24,8 +25,8 @@ public class UsersServlet {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String registerUser(@FormParam("login") String login,
 			@FormParam("password") String password,
-			@FormParam("name") String name,
-			@FormParam("surname") String surname) {
+			@DefaultValue("")@FormParam("name") String name,
+			@DefaultValue("")@FormParam("surname") String surname) {
 
 		JSONObject jsonReruest = new JSONObject();
 
@@ -101,5 +102,47 @@ public class UsersServlet {
 		return jsonReruest.toJSONString();
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("update")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updateUser(@FormParam("login") String login,
+			@FormParam("password") String password,
+			@DefaultValue("")@FormParam("name") String name,
+			@DefaultValue("")@FormParam("surname") String surname) {
+
+		JSONObject jsonReruest = new JSONObject();
+
+		String msg;
+
+		try {
+
+				usersDAO.updateUser(login, password, name, surname);
+
+				User u = usersDAO.getUser(login);
+				
+				JSONObject jsonData = new JSONObject();
+
+				jsonData.put("id", u.getId());
+				jsonData.put("login", u.getLogin());
+				jsonData.put("password", u.getPassword());
+				jsonData.put("name", u.getName());
+				jsonData.put("surname", u.getSurname());
+
+				jsonReruest.put("data", jsonData);
+
+				msg = Messages.OK;
+			
+
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
+
 
 }

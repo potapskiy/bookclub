@@ -21,6 +21,9 @@ public class BooksDAO {
 	Connection conn = null;
 	
 	PreparedStatement getPopular;
+	PreparedStatement searchBooks;
+	PreparedStatement searchBooksByGenre;
+	PreparedStatement searchBooksByGenreAndName;
 	PreparedStatement addLike;
 	PreparedStatement addDislike;
 	PreparedStatement getBook;
@@ -37,10 +40,37 @@ public class BooksDAO {
 				
 				
 				getPopular = conn
-						.prepareStatement("SELECT b.bookId, b.name as bookName, a.name as authorName FROM "
+						.prepareStatement("SELECT b.bookId, b.info, "
+								+ "b.genre, b.likes, b.dislikes, b.name as bookName, a.name as authorName FROM "
 								+ DBParams.booksTable + " b\r\n" + 
 								"LEFT JOIN " + DBParams.authorsTable + " a ON b.authorId=a.authorId \r\n"
 								+ " ORDER BY likes DESC limit ?,?");
+				
+				searchBooks = conn
+						.prepareStatement("SELECT b.bookId, b.info, "
+								+ "b.genre, b.likes, b.dislikes, b.name as bookName, a.name as authorName FROM "
+								+ DBParams.booksTable + " b\r\n" + 
+								"LEFT JOIN " + DBParams.authorsTable + " a ON b.authorId=a.authorId \r\n"
+								+ " WHERE (b.name like ?) or (a.name like ?)"
+								+ "ORDER BY likes DESC limit ?,?");
+				
+				searchBooksByGenre = conn
+						.prepareStatement("SELECT b.bookId, b.info, "
+								+ "b.genre, b.likes, b.dislikes, b.name as bookName, a.name as authorName FROM "
+								+ DBParams.booksTable + " b\r\n" + 
+								"LEFT JOIN " + DBParams.authorsTable + " a ON b.authorId=a.authorId \r\n"
+								+ " WHERE b.genre = ? "
+								+ "ORDER BY likes DESC limit ?,?");
+				
+				searchBooksByGenreAndName = conn
+						.prepareStatement("SELECT b.bookId, b.info, "
+								+ "b.genre, b.likes, b.dislikes, b.name as bookName, a.name as authorName FROM "
+								+ DBParams.booksTable + " b\r\n" + 
+								"LEFT JOIN " + DBParams.authorsTable + " a ON b.authorId=a.authorId \r\n"
+								+ " WHERE (b.genre = ?) and " 
+								+ "((b.name like ?) or (a.name like ?))"
+								+ "ORDER BY likes DESC limit ?,?");
+				
 				
 				addLike = conn.prepareStatement("UPDATE " + DBParams.booksTable 
 						+ " SET likes=likes+1 WHERE bookId = ?");
@@ -103,8 +133,74 @@ public class BooksDAO {
 
 		while (rs.next()) {
 
-			books.add(new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName")));
+			books.add(new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName"),
+					rs.getString("info"),rs.getInt("likes"),rs.getInt("dislikes"),rs.getString("genre")));
+			
+		}
+		
+		return books;
 
+	}
+	
+	public List<Book> searchBooks(String search, int limit, int offset) throws SQLException {
+
+		List<Book> books = new ArrayList<Book>();
+
+		search = "%".concat(search).concat("%");
+		searchBooks.setString(1, search);
+		searchBooks.setString(2, search);
+		searchBooks.setInt(3, offset);
+		searchBooks.setInt(4, limit);
+		ResultSet rs = searchBooks.executeQuery();
+
+		while (rs.next()) {
+
+			books.add(new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName"),
+					rs.getString("info"),rs.getInt("likes"),rs.getInt("dislikes"),rs.getString("genre")));
+			
+		}
+		
+		return books;
+
+	}
+	
+	public List<Book> searchBooksByGenre(String genre, int limit, int offset) throws SQLException {
+
+		List<Book> books = new ArrayList<Book>();
+		
+		searchBooksByGenre.setString(1, genre);
+		searchBooksByGenre.setInt(2, offset);
+		searchBooksByGenre.setInt(3, limit);
+		ResultSet rs = searchBooksByGenre.executeQuery();
+
+		while (rs.next()) {
+
+			books.add(new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName"),
+					rs.getString("info"),rs.getInt("likes"),rs.getInt("dislikes"),rs.getString("genre")));
+			
+		}
+		
+		return books;
+
+	}
+	
+	public List<Book> searchBooksByGenreAndName(String genre, String name, int limit, int offset) throws SQLException {
+
+		List<Book> books = new ArrayList<Book>();
+		
+		name = "%".concat(name).concat("%");
+		searchBooksByGenreAndName.setString(1, genre);
+		searchBooksByGenreAndName.setString(2, name);
+		searchBooksByGenreAndName.setString(3, name);
+		searchBooksByGenreAndName.setInt(4, offset);
+		searchBooksByGenreAndName.setInt(5, limit);
+		ResultSet rs = searchBooksByGenreAndName.executeQuery();
+
+		while (rs.next()) {
+
+			books.add(new Book(rs.getInt("bookId"),rs.getString("bookName"),rs.getString("authorName"),
+					rs.getString("info"),rs.getInt("likes"),rs.getInt("dislikes"),rs.getString("genre")));
+			
 		}
 		
 		return books;
@@ -154,6 +250,7 @@ public class BooksDAO {
 			book.setBookInfo(rs.getNString("info"));
 			book.setLikes(rs.getInt("likes"));
 			book.setLikes(rs.getInt("dislikes"));
+			book.setGenre(rs.getString("genre"));
 
 		}
 		
