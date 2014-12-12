@@ -50,7 +50,7 @@ public class CommentsDAO {
 				updateComment = conn.prepareStatement("UPDATE " + DBParams.commentsTable
 						+ " SET commentText = ?  where commentId = ?");
 				
-				deleteComment = conn.prepareStatement("DELETE * FROM " + DBParams.commentsTable
+				deleteComment = conn.prepareStatement("DELETE FROM " + DBParams.commentsTable
 						+ " WHERE commentId = ?");
 
 			} catch (Exception e) {

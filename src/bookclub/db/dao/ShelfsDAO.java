@@ -54,17 +54,17 @@ public class ShelfsDAO {
 						+ DBParams.shelfsTable
 						+ " SET name = ? WHERE shelfId = ?)");
 
-				deleteShelf = conn.prepareStatement("DELETE * FROM "
+				deleteShelf = conn.prepareStatement("DELETE FROM "
 						+ DBParams.shelfsTable + " WHERE shelfId = ?");
 
-				deleteShelfBooks = conn.prepareStatement("DELETE * FROM "
+				deleteShelfBooks = conn.prepareStatement("DELETE FROM "
 						+ DBParams.booksOnShelfs + " WHERE shelfId = ?");
 
 				insertBookToShelf = conn.prepareStatement("INSERT INTO "
 						+ DBParams.booksOnShelfs
 						+ " (shelfId, bookId) VALUES (?,?)");
 
-				deleteBookFromShelf = conn.prepareStatement("DELETE * FROM "
+				deleteBookFromShelf = conn.prepareStatement("DELETE FROM "
 						+ DBParams.booksOnShelfs
 						+ " WHERE shelfId =? AND bookId = ?");
 
