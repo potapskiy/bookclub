@@ -61,6 +61,44 @@ public class ShelfsServlet {
 
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	@POST
+	@Path("update")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updateShelf(@FormParam("shelf-id") int shelfId,
+			@FormParam("name") String name) {
+
+
+		JSONObject jsonReruest = new JSONObject();
+
+		String msg;
+
+		try {
+
+			shelfsDAO.updateShelf(shelfId, name);
+			Shelf sh = shelfsDAO.getShelf(shelfId);
+			
+			JSONObject jsonData = new JSONObject();
+
+			jsonData.put("id", sh.getId());
+			jsonData.put("userId", sh.getUserId());
+			jsonData.put("name", sh.getName());
+
+
+			jsonReruest.put("data", jsonData);
+			msg = Messages.OK;
+			
+		} catch (Exception e) {
+			msg = Messages.ERROR;
+		}
+
+		
+		jsonReruest.put("msg", msg);
+		return jsonReruest.toJSONString();
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	@POST
 	@Path("delete")
@@ -207,6 +245,9 @@ public class ShelfsServlet {
 				jsonBook.put("id", book.getId());
 				jsonBook.put("book-name", book.getBookName());
 				jsonBook.put("author-name", book.getAuthorName());
+				jsonBook.put("likes", book.getLikes());
+				jsonBook.put("dislikes", book.getDislikes());
+				jsonBook.put("genre", book.getGenre());
 
 				jsonBooks.add(jsonBook);
 

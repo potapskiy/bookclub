@@ -8,6 +8,15 @@ public class Shelf {
 	private String name;
 	private int count;
 	
+	
+	public Shelf() {
+		super();
+		this.id = 0;
+		this.userId = 0;
+		this.name = "";
+		this.count = 0;
+	}
+	
 	public Shelf(int id, int userId, String name, int count) {
 		super();
 		this.id = id;
