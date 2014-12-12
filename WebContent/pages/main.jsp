@@ -184,7 +184,7 @@ $("#addAuthor").submit(function(e)
 										<td align="left"><select id="bookGenre"
 											name="bookGenre">
 												<option selected value="Adventure">Adventure</option>
-												<option value="Business and finance">Business and finance</option>
+												<option value="Business and finance">Business</option>
 												<option value="Classics">Classics</option>
 												<option value="Fantasy">Fantasy</option>
 												<option value="Philosophy">Philosophy</option>
