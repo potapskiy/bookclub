@@ -48,7 +48,7 @@ public class ShelfsDAO {
 								+ " (userId, name) VALUES (?,?)");
 
 				getShelf = conn.prepareStatement("SELECT * FROM "
-						+ DBParams.shelfsTable + " WHERE shelfId = ?)");
+						+ DBParams.shelfsTable + " WHERE shelfId = ?");
 
 				updateShelf = conn.prepareStatement("UPDATE "
 						+ DBParams.shelfsTable
@@ -87,7 +87,7 @@ public class ShelfsDAO {
 								+ " bs\r\n"
 								+ "LEFT JOIN "
 								+ DBParams.booksTable
-								+ " u ON bs.bookId=b.bookId \r\n"
+								+ " b ON bs.bookId=b.bookId \r\n"
 								+ "LEFT JOIN "
 								+ DBParams.authorsTable
 								+ " a ON b.authorId=a.authorId \r\n"

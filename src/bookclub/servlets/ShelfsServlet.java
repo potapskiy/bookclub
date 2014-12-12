@@ -257,6 +257,7 @@ public class ShelfsServlet {
 			msg = Messages.OK;
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			msg = Messages.ERROR;
 		}
 
