@@ -110,7 +110,7 @@ public class CommentsDAO {
 		while (rs.next()) {
 
 			comments.add(new Comment(rs.getInt("commentId"),rs.getString("name"), rs
-					.getString("surname"), rs.getString("commentText")));
+					.getString("surname"),rs.getString("login"), rs.getString("commentText")));
 
 		}
 		
